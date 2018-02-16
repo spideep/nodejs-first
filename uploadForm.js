@@ -1,11 +1,22 @@
 var http = require('http');
 var formidable = require('formidable');
+var fs = require('fs');
 
 var requestListener = function (req, res) {
     'use strict';
+    var targetpath = '/home/alexis/Documents/';
     if (req.url === '/fileupload') {
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
+            var oldpath = files.filetoupload.path;
+            var newpath = targetpath + files.filetoupload.name;
+            fs.rename(oldpath, newpath, function (err) {
+                if (err) {
+                    throw err;
+                }
+                res.write('File uploaded and moved!');
+                res.end();
+            });
             if (err) {
                 res.write('<pre>Error: ' + err + '</pre>');
             }
@@ -15,8 +26,6 @@ var requestListener = function (req, res) {
             if (fields) {
                 res.write('<pre>Fields : ' + fields + '</pre>');
             }
-            res.write('File uploaded');
-            res.end();
         });
     } else {
         res.writeHead(200, {
