@@ -1,1 +1,1 @@
-This is data for newfile3.txt
+This is the text of new file 3.
